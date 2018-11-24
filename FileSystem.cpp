@@ -1,6 +1,13 @@
 #include <string>
 #include "FileSystem.h"
 using namespace std;
+
+class FATFile: public File{
+    public: bool isDirectory(){
+        return true;
+    }
+};
+
 class FileSystem {
     public:
         virtual int init();
@@ -8,15 +15,11 @@ class FileSystem {
 };
 
 class FATFileSystem: public FileSystem {
+    public:
+        int fileFromPath(string path, File* result){
+            result = new FATFile();
+            return 0;
+        }
 
 }; 
 
-
-class File{
-    public:
-        virtual bool isDirectory();
-};
-
-class FATFile: public File{
-
-};
