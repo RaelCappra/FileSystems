@@ -111,7 +111,7 @@ int ls(int argc, string* argv){
     if(!filenames)
         return ERR;
     cout << "TIPO|NOME|TAMANHO|BLOCOS" << "\n";
-    if(len_dir = 0){
+    if(len_dir == 0){
         return 0;
     }
         
