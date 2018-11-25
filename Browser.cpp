@@ -9,14 +9,14 @@ FileSystem* fs;
 File* cwd;
 string pathCwd;
 int init(){
-    /*fs = new FATFileSystem(); //TODO: decidir
+    fs = new FATFileSystem(); //TODO: decidir
     if(fs){
         fs->init();
         pathCwd = "/";
         fs->fileFromPath(pathCwd, cwd);
         return OK;
     }
-    return NULL_FS;*/
+    return NULL_FS;
 }
 
 string canonPath(string path){
@@ -80,7 +80,7 @@ string canonPath(string path){
     }
     return result;
 }
-/*
+
 int cd(int argc, string* argv){
     if(argc < 1){
         string s[1] = {"/"};
@@ -100,7 +100,7 @@ int cd(int argc, string* argv){
     }
     return NOT_DIR;
 }
-*/
+
 int main(){
     pathCwd = "/home/rael";
     cout << canonPath("//////home///./rael///pasta/.././././memes/") << "\n";

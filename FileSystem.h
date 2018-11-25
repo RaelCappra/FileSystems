@@ -1,5 +1,5 @@
 class File{
     public:
-        virtual bool isDirectory();
+        virtual bool isDirectory(){}
 };
 class FileSystem;
