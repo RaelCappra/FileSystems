@@ -101,9 +101,39 @@ int cd(int argc, string* argv){
     return NOT_DIR;
 }
 
+int ls(int argc, string* argv){
+    if(!fs)
+        return NULL_FS;
+    if(!cwd)
+        return ERR;
+    string* filenames;
+    size_t len_dir = cwd->listFiles(&filenames);
+    if(!filenames)
+        return ERR;
+    cout << "TIPO|NOME|TAMANHO|BLOCOS" << "\n";
+    if(len_dir = 0){
+        return 0;
+    }
+        
+    for(int i = 0; i < len_dir; i++){
+        File f;
+        int error = fs->fileFromPath(filenames[i], &f);
+        if(error)
+            return error;
+        if(f.isDirectory())
+            cout << "D " << f.getName();
+        else{
+            cout << "A " << f.getName() << " " << f.getSize() << "B " << f.blockCount();
+        }
+        cout << "\n";
+    }
+}
+
 int main(){
     pathCwd = "/home/rael";
     cout << canonPath("//////home///./rael///pasta/.././././memes/") << "\n";
     cout << canonPath("games//./memesg///") << "\n";
     cout << canonPath("games//./memesg///../..//../../../.././././//lucas/skyrim") << "\n";
+    cout << canonPath(".") << "\n";
+    cout << canonPath("/./././") << "\n";
 }
