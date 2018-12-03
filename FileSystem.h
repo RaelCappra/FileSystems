@@ -7,5 +7,12 @@ class File{
         virtual string getName(){}
         virtual string getSize(){}
         virtual string blockCount(){}
+        virtual int write(size_t index, size_t num_bytes, string content){}
 };
-class FileSystem;
+class FileSystem {
+    public:
+        virtual int init(){}
+        virtual int fileFromPath(string path, File* result){}
+        virtual bool exists(string path){}
+        virtual int create(string path, size_t size, File* result){}
+};

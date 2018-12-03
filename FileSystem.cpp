@@ -8,11 +8,6 @@ class FATFile: public File{
     }
 };
 
-class FileSystem {
-    public:
-        virtual int init(){}
-        virtual int fileFromPath(string path, File* result){}
-};
 
 class FATFileSystem: public FileSystem {
     public:

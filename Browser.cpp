@@ -128,6 +128,31 @@ int ls(int argc, string* argv){
         cout << "\n";
     }
 }
+int touch(int argc, string* argv){
+    if(!fs)
+        return NULL_FS;
+    if(!cwd)
+        return ERR;
+    if(argc < 2)
+        return ERR;
+    string filename = argv[0];
+    size_t size = atoi(argv[1].c_str());//TODO: Convert to int
+    string content;
+    if(argc < 3)
+        content = string(new char[size]);
+    content = argv[2];
+    string path = canonPath(filename);
+    if(fs->exists(path))
+        return FILE_EXISTS;
+    File f;
+    int result = fs->create(path, size, &f);
+    if(result)
+        return result;
+    int write_result = f.write(0, size, content);
+    if(write_result)
+        return write_result;
+    return OK;
+}
 
 int main(){
     pathCwd = "/home/rael";
