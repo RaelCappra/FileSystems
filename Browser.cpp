@@ -13,7 +13,9 @@ int init(){
     if(fs){
         fs->init();
         pathCwd = "/";
-        fs->fileFromPath(pathCwd, cwd);
+        File f;
+        fs->fileFromPath(pathCwd, &f);
+        cwd = &f;
         return OK;
     }
     return NULL_FS;
@@ -156,6 +158,7 @@ int touch(int argc, string* argv){
 
 int pwd(int argc, string* argv){
     cout << pathCwd << "\n";
+    return 0;
 }
 string trim(string s){
     int start = 0;
@@ -188,13 +191,13 @@ int main(){
             words[i++] = segment;
         }
         if(words[0] == "cd"){
-            cd(i - 1, words + 1) || cout << "ERROR\n";
+            cd(i - 1, words + 1) && cout << "ERROR\n";
         } else if(words[0] == "touch"){
-            touch(i - 1, words + 1) || cout << "ERROR\n";
+            touch(i - 1, words + 1) && cout << "ERROR\n";
         } else if(words[0] == "ls"){
-            ls(i - 1, words + 1) || cout << "ERROR\n";
+            cout << ls(i - 1, words + 1);
         } else if(words[0] == "pwd"){
-            pwd(i - 1, words + 1) || cout << "ERROR\n";
+            pwd(i - 1, words + 1) && cout << "ERROR\n";
         }
         else{
             cout << "Try again.\n";

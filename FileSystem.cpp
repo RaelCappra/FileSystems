@@ -1,5 +1,6 @@
 #include <string>
 #include "FileSystem.h"
+#include "err.h"
 using namespace std;
 
 struct Block{
@@ -8,9 +9,32 @@ struct Block{
 };
 class FATFile: public File{
     public:
+        FileSystem* fs;
         Block* firstBlock;
+        size_t dirEntries = 0;
+
         bool isDirectory(){
             return true;
+        }
+        size_t listFiles(string **filenames){
+            *filenames = new string[256];//TODO:better define dir max length (hah, as if)
+            if(!isDirectory()){
+                return 1;
+            }
+            size_t j = 0;
+            Block* curBlock = firstBlock;
+            for(size_t i = 0; i < dirEntries; i++){
+                string name = string();
+                for(; curBlock && curBlock->contents[j] != '\0'; j++){
+                    if(j == fs->getBlockSize()){
+                        j = 0;
+                        curBlock = firstBlock->next;
+                    }
+                    name += curBlock->contents[j];
+                }
+                *filenames[i] = name;
+            }
+            return dirEntries;
         }
 };
 
@@ -18,29 +42,38 @@ class FATFile: public File{
 class FATFileSystem: public FileSystem {
     private:
         Block** table;
-        string* name_table;
+        string* nameTable;
 
-        size_t table_size = 0;
-        size_t block_size, partition_size;
+        size_t tableSize = 0;
+        size_t blockSize, partitionSize;
     public:
         int init(){
             return init(512*1024, 100*1024*1024);
         }
-        int init(size_t block_size, size_t partition_size){
-            this->block_size = block_size;
-            this->partition_size = partition_size;
-            table_size++;
+        int init(size_t blockSize, size_t partitionSize){
+            this->blockSize = blockSize;
+            this->partitionSize = partitionSize;
+            tableSize++;
             Block* root_block = new Block();
             root_block->next = NULL;
-            root_block->contents = (char*)malloc(block_size * sizeof(char) - sizeof(Block*));
-            table = (Block**)malloc(partition_size * block_size);
-            //table[0] = root_block;
+            root_block->contents = (char*)malloc(blockSize * sizeof(char) - sizeof(Block*));
+            table = (Block**)malloc(partitionSize / blockSize + blockSize);
+            table[0] = root_block;
             return 0;
         }
 
         int fileFromPath(string path, File* result){
-            result = new FATFile();
-            return 0;
+            FATFile* fat = new FATFile();
+            if(path == "/"){
+                fat->firstBlock = table[0];
+                fat->fs = this;
+                *result = *fat;
+                return 0;
+            }
+            return INEX_FILE;
+        }
+        size_t getBlockSize(){
+            return blockSize;
         }
 }; 
 
