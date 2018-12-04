@@ -154,11 +154,51 @@ int touch(int argc, string* argv){
     return OK;
 }
 
+int pwd(int argc, string* argv){
+    cout << pathCwd << "\n";
+}
+string trim(string s){
+    int start = 0;
+    int end = s.length() - 1;
+    for(; start <= end && (s[start] == ' ' || s[start] == '\n' || s[start] == '\r'); start++){
+    }
+    for(; end >= start && (s[end] == ' ' || s[end] == '\n' || s[end] == '\r'); start++){
+    }
+    return s.substr(start, end - start + 1);
+}
+
 int main(){
-    pathCwd = "/home/rael";
-    cout << canonPath("//////home///./rael///pasta/.././././memes/") << "\n";
-    cout << canonPath("games//./memesg///") << "\n";
-    cout << canonPath("games//./memesg///../..//../../../.././././//lucas/skyrim") << "\n";
-    cout << canonPath(".") << "\n";
-    cout << canonPath("/./././") << "\n";
+    init();
+    string cmd = "";
+    while(1){
+        getline(cin, cmd);
+        cmd = trim(cmd);
+        if(cmd == "exit")
+            break;
+        string words[255];
+        int start, end, i = 0;
+        for(start = end = 0; start < cmd.length(); start = end){
+            while(cmd[start] == ' ')
+                start++;
+            for(end = start; end < cmd.length() && cmd[end] != ' '; end++){
+            }
+            if(end <= start)
+                break;
+            string segment = cmd.substr(start, end - start);
+            words[i++] = segment;
+        }
+        if(words[0] == "cd"){
+            cd(i - 1, words + 1) || cout << "ERROR\n";
+        } else if(words[0] == "touch"){
+            touch(i - 1, words + 1) || cout << "ERROR\n";
+        } else if(words[0] == "ls"){
+            ls(i - 1, words + 1) || cout << "ERROR\n";
+        } else if(words[0] == "pwd"){
+            pwd(i - 1, words + 1) || cout << "ERROR\n";
+        }
+        else{
+            cout << "Try again.\n";
+        }
+    }
+    cout << "Bye.\n";
 }

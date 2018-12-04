@@ -34,7 +34,7 @@ class FATFileSystem: public FileSystem {
             root_block->next = NULL;
             root_block->contents = (char*)malloc(block_size * sizeof(char) - sizeof(Block*));
             table = (Block**)malloc(partition_size * block_size);
-            table[0] = root_block;
+            //table[0] = root_block;
             return 0;
         }
 
