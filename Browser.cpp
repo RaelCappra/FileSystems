@@ -136,7 +136,7 @@ int touch(int argc, string* argv){
     if(argc < 2)
         return ERR;
     string filename = argv[0];
-    size_t size = atoi(argv[1].c_str());//TODO: Convert to int
+    size_t size = atoi(argv[1].c_str());
     string content;
     if(argc < 3)
         content = string(new char[size]);
