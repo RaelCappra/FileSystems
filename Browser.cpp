@@ -13,9 +13,7 @@ int init(){
     if(fs){
         fs->init();
         pathCwd = "/";
-        File f;
-        fs->fileFromPath(pathCwd, &f);
-        cwd = &f;
+        fs->fileFromPath(pathCwd, &cwd);
         return OK;
     }
     return NULL_FS;
@@ -89,15 +87,15 @@ int cd(int argc, string* argv){
         return cd(1, s);
     }
     string path = canonPath(argv[0]);
-    File f;
+    File* f;
     if(!fs)
         return NULL_FS;
     int error = fs->fileFromPath(path, &f);
     if(error)
         return error;
-    if(f.isDirectory()){
+    if(f->isDirectory()){
         pathCwd = path;
-        cwd = &f;
+        cwd = f;
         return OK;
     }
     return NOT_DIR;
@@ -106,9 +104,9 @@ int cd(int argc, string* argv){
 int ls(int argc, string* argv){
     if(!fs)
         return NULL_FS;
-    if(!cwd)
+    if(cwd == NULL)
         return ERR;
-    string* filenames;
+    string* filenames = (string*)malloc(256 * sizeof(string));
     size_t len_dir = cwd->listFiles(&filenames);
     if(!filenames)
         return ERR;
@@ -116,16 +114,17 @@ int ls(int argc, string* argv){
     if(len_dir == 0){
         return 0;
     }
+    printf("%d\n", len_dir);
         
     for(int i = 0; i < len_dir; i++){
-        File f;
+        File *f;
         int error = fs->fileFromPath(filenames[i], &f);
         if(error)
             return error;
-        if(f.isDirectory())
-            cout << "D " << f.getName();
+        if(f->isDirectory())
+            cout << "D " << f->getName();
         else{
-            cout << "A " << f.getName() << " " << f.getSize() << "B " << f.blockCount();
+            cout << "A " << f->getName() << " " << f->getSize() << "B " << f->blockCount();
         }
         cout << "\n";
     }
@@ -133,8 +132,6 @@ int ls(int argc, string* argv){
 int touch(int argc, string* argv){
     if(!fs)
         return NULL_FS;
-    if(!cwd)
-        return ERR;
     if(argc < 2)
         return ERR;
     string filename = argv[0];

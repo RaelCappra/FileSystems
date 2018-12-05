@@ -13,7 +13,7 @@ class FileSystem {
     public:
         virtual size_t getBlockSize(){}
         virtual int init(){}
-        virtual int fileFromPath(string path, File* result){}
+        virtual int fileFromPath(string path, File** result){}
         virtual bool exists(string path){}
         virtual int create(string path, size_t size, File* result){}
 };

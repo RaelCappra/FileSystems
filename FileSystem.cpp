@@ -23,6 +23,8 @@ class FATFile: public File{
             }
             size_t j = 0;
             Block* curBlock = firstBlock;
+            if(dirEntries == 0)
+                return 0;
             for(size_t i = 0; i < dirEntries; i++){
                 string name = string();
                 for(; curBlock && curBlock->contents[j] != '\0'; j++){
@@ -62,12 +64,12 @@ class FATFileSystem: public FileSystem {
             return 0;
         }
 
-        int fileFromPath(string path, File* result){
+        int fileFromPath(string path, File** result){
             FATFile* fat = new FATFile();
             if(path == "/"){
                 fat->firstBlock = table[0];
                 fat->fs = this;
-                *result = *fat;
+                *result = fat;
                 return 0;
             }
             return INEX_FILE;
