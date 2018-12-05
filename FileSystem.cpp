@@ -74,6 +74,15 @@ class FATFileSystem: public FileSystem {
             }
             return INEX_FILE;
         }
+
+        int createDir(string filename, string parent, File* result){
+            int error;
+            File* parentDir;
+            if(error = fileFromPath(parent, &parentDir))
+                return error;
+            int index = 0; //TODO: determine the end of dir to append
+            return parentDir->write(index, filename.length(), filename);
+        }
         size_t getBlockSize(){
             return blockSize;
         }

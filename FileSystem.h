@@ -16,5 +16,6 @@ class FileSystem {
         virtual int fileFromPath(string path, File** result){}
         virtual bool exists(string path){}
         virtual int create(string path, size_t size, File* result){}
+        virtual int createDir(string name, string parent, File* result){}
 };
 class FATFileSystem;

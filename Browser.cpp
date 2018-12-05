@@ -153,6 +153,22 @@ int touch(int argc, string* argv){
     return OK;
 }
 
+int mkdir(int argc, string* argv){
+    if(!fs)
+        return NULL_FS;
+    if(argc < 1)
+        return ERR;
+    string filename = argv[0];
+    string path = canonPath(filename);
+    if(fs->exists(path))
+        return FILE_EXISTS;
+    File f;
+    int result = fs->createDir(filename, pathCwd, &f);
+    if(result)
+        return result;
+    return OK;
+}
+
 int pwd(int argc, string* argv){
     cout << pathCwd << "\n";
     return 0;
@@ -195,6 +211,8 @@ int main(){
             cout << ls(i - 1, words + 1);
         } else if(words[0] == "pwd"){
             pwd(i - 1, words + 1) && cout << "ERROR\n";
+        } else if(words[0] == "mkdir"){
+            mkdir(i - 1, words + 1) && cout << "ERROR\n";
         }
         else{
             cout << "Try again.\n";
